@@ -44,18 +44,19 @@ def decode_single_byte_xor(s):
     """Decodes an xor-encoded string using frequency analysis"""
     dec = ""
     max_score = 0
+    key = 0
 
     for char in range(256):
         candidate = single_byte_xor(s, chr(char))
         score = calculate_score(candidate)
         if score > max_score:
-            dec, max_score = candidate, score
+            dec, max_score, key = candidate, score, char
 
-    return dec
+    return dec, key
 
 
 enc = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-assert decode_single_byte_xor(enc) == "Cooking MC's like a pound of bacon"
+assert decode_single_byte_xor(enc) == ("Cooking MC's like a pound of bacon", 88)
 
 # ==============================================================================
 # Problem 4
@@ -66,12 +67,13 @@ def detect_single_byte_xor(filename):
     f = open(filename, "r").read().split("\n")
     dec = ""
     max_score = 0
+    key = 0
     for line in f:
-        candidate = decode_single_byte_xor(line)
+        candidate, k = decode_single_byte_xor(line)
         score = calculate_score(candidate)
         if score > max_score:
-            dec, max_score = candidate, score
+            dec, max_score, key = candidate, score, k
 
-    return dec
+    return dec, k
 
-assert detect_single_byte_xor("files/4.txt") == "Now that the party is jumping\n"
+assert detect_single_byte_xor("files/4.txt") == ("Now that the party is jumping\n", 64)
