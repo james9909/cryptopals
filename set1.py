@@ -139,3 +139,29 @@ def break_repeating_key_xor(s):
 
 f = open("files/6.txt").read()
 s = break_repeating_key_xor(base64.b64decode(f)).decode("hex")
+
+# ==============================================================================
+# Problem 7
+
+from Crypto.Cipher import AES
+
+def decrypt_aes(s, key):
+    aes = AES.new(key)
+    return aes.decrypt(s)
+
+f = open("files/7.txt", "r").read()
+message = decrypt_aes(base64.b64decode(f), "YELLOW SUBMARINE")
+
+# ==============================================================================
+# Problem 8
+
+f = open("files/8.txt", "r").read().split("\n")
+detected = ""
+for line in f:
+    groups = group_string(line.decode("hex"), 16)
+    uniq = set(groups)
+    if len(groups) > len(uniq):
+        detected = line
+        break
+
+assert detected == "d880619740a8a19b7840a8a31c810a3d08649af70dc06f4fd5d2d69c744cd283e2dd052f6b641dbf9d11b0348542bb5708649af70dc06f4fd5d2d69c744cd2839475c9dfdbc1d46597949d9c7e82bf5a08649af70dc06f4fd5d2d69c744cd28397a93eab8d6aecd566489154789a6b0308649af70dc06f4fd5d2d69c744cd283d403180c98c8f6db1f2a3f9c4040deb0ab51b29933f2c123c58386b06fba186a"
